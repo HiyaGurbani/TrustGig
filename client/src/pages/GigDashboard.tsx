@@ -7,7 +7,7 @@ import { Progress } from "@/components/ui/progress"
 import { motion } from "framer-motion"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Briefcase, DollarSign, Clock, Star, ChevronRight, Search } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 
 // Mock data for the dashboard
@@ -33,6 +33,7 @@ const earningsData = [
 ]
 
 export default function GigWorkerDashboard() {
+  const {id } = useParams();
   const [activeTab, setActiveTab] = useState('overview')
 
   return (
@@ -40,9 +41,21 @@ export default function GigWorkerDashboard() {
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Freelancer Dashboard</h1>
+          <div className='gap-2'>
+
+
+          <Link  to="/explore">
           <Button>
             <Search className="mr-2 h-4 w-4" /> Find New Jobs
           </Button>
+          </Link>
+
+          <Link  to={`/profile/gig/${id}`}>
+          <Button>
+            View Profile
+          </Button>
+          </Link>
+          </div>
         </header>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">

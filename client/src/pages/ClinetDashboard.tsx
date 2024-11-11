@@ -8,7 +8,7 @@ import { Progress } from "@/components/ui/progress"
 import { motion } from "framer-motion"
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts'
 import { Briefcase, DollarSign, Clock, Users, Star, ChevronRight, Plus } from 'lucide-react'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 
 
 // Mock data for the dashboard
@@ -16,6 +16,8 @@ const activeProjects = [
   { id: 1, title: "E-commerce Website Redesign", freelancer: "Alice Johnson", progress: 75, dueDate: "2024-04-15" },
   { id: 2, title: "Mobile App Development", freelancer: "Bob Smith", progress: 40, dueDate: "2024-05-20" },
   { id: 3, title: "Content Marketing Strategy", freelancer: "Carol Williams", progress: 90, dueDate: "2024-03-31" },
+  { id: 4, title: "Web3 ", freelancer: "Rom sane ", progress: 90, dueDate: "2024-03-31" },
+  { id: 5 , title: "CMS ", freelancer: "Jatin ", progress: 90, dueDate: "2024-03-31" },
 ]
 
 const recentTransactions = [
@@ -34,6 +36,7 @@ const spendingData = [
 ]
 
 export default function ClientDashboard() {
+  const {id} = useParams();
   const [activeTab, setActiveTab] = useState('overview')
 
   return (
@@ -41,9 +44,11 @@ export default function ClientDashboard() {
       <div className="max-w-7xl mx-auto">
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Client Dashboard</h1>
+          <Link to={`/post-jobs/${id}`}>
           <Button>
             <Plus className="mr-2 h-4 w-4" /> Post a New Job
           </Button>
+          </Link>
         </header>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
@@ -85,7 +90,7 @@ export default function ClientDashboard() {
                   <CardTitle>Active Projects</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <ul className="space-y-4">
+                  <ul className="space-y-10">
                     {activeProjects.map((project) => (
                       <li key={project.id} className="flex items-center justify-between">
                         <div>
@@ -93,8 +98,9 @@ export default function ClientDashboard() {
                           <p className="text-sm text-gray-500">{project.freelancer}</p>
                         </div>
                         <div className="text-right">
-                          <p className="text-sm font-medium">{project.progress}%</p>
-                          <Progress value={project.progress} className="w-20" />
+                          <Link to="/milestone">
+                          <Button>Next  </Button>
+                          </Link>
                         </div>
                       </li>
                     ))}

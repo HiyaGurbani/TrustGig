@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -9,17 +9,24 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { motion } from "framer-motion"
 import { Briefcase, MapPin, Mail, Phone, Globe, Star, Edit, Save } from 'lucide-react'
+import { Link, useParams } from 'react-router-dom'
 
 export function ClientProfile() {
+  const {id} = useParams();
   const [isEditing, setIsEditing] = useState(false)
   const [clientData, setClientData] = useState({
-    name: "John Doe",
-    company: "TechCorp Solutions",
+    name: "Jekes ",
+    company: "Soft ",
     location: "San Francisco, CA",
-    email: "john.doe@techcorp.com",
+    email: "soft.doe@techcorp.com",
     phone: "+1 (555) 123-4567",
     website: "www.techcorp.com",
     bio: "Innovative tech company specializing in cutting-edge software solutions. We're always looking for talented freelancers to join our projects.",
+  })
+
+  useEffect(()=>{
+    console.log(id);
+    
   })
 
   const handleInputChange = (e) => {
@@ -54,6 +61,13 @@ export function ClientProfile() {
               {isEditing ? <Save className="mr-2 h-4 w-4" /> : <Edit className="mr-2 h-4 w-4" />}
               {isEditing ? 'Save' : 'Edit'}
             </Button>
+            
+
+            <Link to={`/dashboard/client/${id}`}>
+            <Button>
+              View Dashboard
+            </Button>
+            </Link>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="about" className="mt-6">

@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useNavigate } from 'react-router-dom';
 
 // export default function AuthPage() {
 //     const [isLoading, setIsLoading] = useState(false);
@@ -46,7 +47,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 //     //   } catch (error) {
 //     //     // Handle error response
 //     //     const errorMessage = error.response?.data?.message || error.message;
-//     //     alert(`Error: ${errorMessage}`);
+//     //     alert(Error: ${errorMessage});
 //     //   } finally {
 //     //     setIsLoading(false);
 //     //   }
@@ -75,7 +76,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
           
 //         } catch (error) {
 //           const errorMessage = error.response?.data?.message || error.message;
-//           alert(`Error: ${errorMessage}`);
+//           alert(Error: ${errorMessage});
           
 //         } finally {
 //           setIsLoading(false);
@@ -95,7 +96,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
           
 //         } catch (error) {
 //           const errorMessage = error.response?.data?.message || error.message;
-//           alert(`Error: ${errorMessage}`);
+//           alert(Error: ${errorMessage});
           
 //         } finally {
 //           setIsLoading(false);
@@ -180,6 +181,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 // }
 
 export default function AuthPage() {
+  const naviagator = useNavigate();
     const [isLoading, setIsLoading] = useState(false);
     const [formData, setFormData] = useState({
       name: '',
@@ -197,6 +199,7 @@ export default function AuthPage() {
   
     const handleSubmit = async (event) => {
       event.preventDefault();
+
       setIsLoading(true);
   
       if (isLoginMode) {
@@ -234,6 +237,16 @@ export default function AuthPage() {
         });
   
         alert('Account created successfully!');
+        const res = response.data;
+        if(formData.accountType =="client"){
+          naviagator(`/profile/client/${res.userId}`)
+        }else if(formData.accountType =="freelancer"){
+
+          naviagator(`/profile/gig/${res.userId}`)
+        }
+       
+
+
         
       } catch (error) {
         const errorMessage = error.response?.data?.message || error.message;

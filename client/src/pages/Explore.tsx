@@ -1,31 +1,51 @@
+import { useState, useEffect } from 'react';
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Briefcase, DollarSign, Clock, MapPin } from 'lucide-react';
+import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-import { useState } from 'react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { motion, AnimatePresence } from "framer-motion"
-import { Search, Briefcase, DollarSign, Clock, MapPin, Star } from 'lucide-react'
-
-// Mock data for jobs
-const jobs = [
+// Fallback mock data for jobs
+const fallbackJobs = [
   { id: 1, title: "Senior React Developer", company: "TechCorp", location: "Remote", salary: "$100k - $150k", type: "Full-time", skills: ["React", "TypeScript", "Node.js"], description: "We are seeking an experienced React developer to join our team and work on cutting-edge web applications..." },
   { id: 2, title: "UX/UI Designer", company: "DesignHub", location: "New York, NY", salary: "$80k - $120k", type: "Contract", skills: ["Figma", "Adobe XD", "Sketch"], description: "Join our creative team to design intuitive and beautiful user interfaces for various client projects..." },
   { id: 3, title: "Data Scientist", company: "AI Innovations", location: "San Francisco, CA", salary: "$120k - $180k", type: "Full-time", skills: ["Python", "Machine Learning", "SQL"], description: "We're looking for a talented data scientist to help us develop advanced AI models and analyze complex datasets..." },
-  // Add more job listings as needed
-]
+];
 
 export default function JobExplore() {
-  const [selectedJob, setSelectedJob] = useState(jobs[0])
-  const [searchTerm, setSearchTerm] = useState("")
+  const [jobs, setJobs] = useState(fallbackJobs);
+  const [selectedJob, setSelectedJob] = useState(fallbackJobs[0]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  // Fetch jobs from the API
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get("http://localhost:7000/api/client/dashboard/client/all");
+        if (response.status !== 200) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.data;
+        setJobs(data); // Assuming the API returns an array of job objects
+      } catch (error) {
+        console.error('Error fetching jobs:', error);
+        // Optionally handle error state or show a message
+      }
+    };
+
+    fetchJobs();
+  }, []);
 
   const filteredJobs = jobs.filter(job => 
     job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
     job.skills.some(skill => skill.toLowerCase().includes(searchTerm.toLowerCase()))
-  )
+  );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-indigo-50 p-6">
@@ -79,14 +99,47 @@ export default function JobExplore() {
         </div>
       </div>
     </div>
-  )
+  );
 }
+
+// function JobList({ jobs, onSelectJob, selectedJob }) {
+//   return (
+//     <div className="space-y-4">
+//       <AnimatePresence>
+//         {jobs.map((job) => (
+//           <motion.div
+//             key={job.id}
+//             initial={{ opacity: 0, y: 20 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             exit={{ opacity: 0, y: -20 }}
+//             transition={{ duration: 0.2 }}
+//           >
+//             <Card 
+//               className={`cursor-pointer transition-all hover:shadow-md ${selectedJob.id === job.id ? 'border-indigo-500 shadow-md' : ''}`}
+//               onClick={() => onSelectJob(job)}
+//             >
+//               <CardContent className="p-4">
+//                 <h3 className="font-semibold text-lg mb-1">{job.title}</h3>
+//                 <p className="text-sm text-gray-600 mb-2">{job.company}</p>
+//                 <div className="flex flex-wrap gap-2">
+//                   {job.skills.slice(0, 3).map((skill, index) => (
+//                     <Badge key={index} variant="secondary">{skill}</Badge>
+//                   ))}
+//                 </div>
+//               </CardContent>
+//             </Card>
+//           </motion.div>
+//         ))}
+//       </AnimatePresence>
+//     </div>
+//   );
+// }
 
 function JobList({ jobs, onSelectJob, selectedJob }) {
   return (
     <div className="space-y-4">
       <AnimatePresence>
-        {jobs.map((job) => (
+        {jobs.slice().reverse().map((job) => ( // Reverse the jobs array
           <motion.div
             key={job.id}
             initial={{ opacity: 0, y: 20 }}
@@ -112,8 +165,9 @@ function JobList({ jobs, onSelectJob, selectedJob }) {
         ))}
       </AnimatePresence>
     </div>
-  )
+  );
 }
+
 
 function JobPreview({ job }) {
   return (
@@ -154,9 +208,10 @@ function JobPreview({ job }) {
         </div>
       </CardContent>
       <CardFooter className="flex justify-between">
-        <Button variant="outline">Save Job</Button>
-        <Button>Apply Now</Button>
-      </CardFooter>
+                <Button variant="outline" onClick={()=>{toast.success("Job saved successfully!");}}>Save Job</Button>
+                <Button onClick={()=>{toast.info("Application submitted!");}}>Apply Now</Button>
+            </CardFooter>
+            <ToastContainer />
     </Card>
-  )
+  );
 }
